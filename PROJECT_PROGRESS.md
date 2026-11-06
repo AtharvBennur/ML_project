@@ -16,7 +16,7 @@
 | Dashboard UI/UX redesign and car data sync | COMPLETED | One-file cyberpunk dashboard now embeds the deduplicated car data, selected Lasso metrics, five-model comparison, original baseline, actual/predicted examples, and residual points. Browser tested after refresh across all five pages and responsive widths. |
 | PowerPoint | NEEDS VERIFICATION | Exactly five slides; car slide updated with selected model, CV/test metrics, target status, and historical baseline. Text and slide count verified; visual rendering is unavailable in this environment. |
 | README | NEEDS VERIFICATION | Car metrics and historical-baseline explanation updated. The full setup/reproducibility sections required by the master specification still need completion. |
-| GitHub Pages update | IN PROGRESS | The source is on `main` with `origin` set to `AtharvBennur/ML_project`; latest changes have not yet been committed/pushed or checked on the hosted page. |
+| GitHub Pages update | COMPLETED | Commit `b5c2f860` is pushed to `origin main`; Pages build/deploy run `42190041668` succeeded. The public directory URL now serves the updated model and metrics. |
 | Requirements file | NOT STARTED | No `requirements.txt` currently exists. |
 | Final project copy | NOT STARTED | No `Machine_Learning_IV_Final` directory exists. Do not replace or destructively alter the current working source tree. |
 | Final ZIP | NOT STARTED | `224010_Atharv_M_Bennur_ML_IV_Final.zip` has not been created or tested. |
@@ -144,7 +144,9 @@ Files created/updated in the active project:
 - Dashboard JavaScript syntax check via extracted inline script and `node --check`: passed.
 - Dashboard data JSON/schema assertions passed: counts, five model rows, selected and historical scores, three examples, 24 price bins, and all 27 represented model years were checked.
 - PowerPoint Open XML: exactly five slides; car slide text contains CV R² 0.782, MAE, MSE, RMSE, test R² 0.772, target met, and historical baseline.
-- `git diff --check`: passed before the latest documentation edits; rerun before commit.
+- `git diff --check`: passed before commit.
+- Git: commit `b5c2f860` pushed to `origin main`.
+- GitHub Pages: build and deploy run `42190041668` completed successfully. The public `/Dashboard/` URL returns HTTP 200 and embeds Lasso Regression, held-out R² 0.772049, and historical R² 0.518957. The live page was opened in the browser; its selected-model callout, metric cards, and three example rows rendered with no page errors.
 - Final ZIP extraction/content verification: NOT RUN (ZIP not created).
 - Visual PowerPoint rendering/overflow check: NOT RUN; no presentation renderer is installed on PATH.
 - Google Colab upload verification: NOT RUN.
@@ -158,18 +160,16 @@ Files created/updated in the active project:
 5. Student raw data has 235 missing values; the existing workflow imputes predictor gaps inside a training-fitted pipeline and drops rows with a missing target.
 6. `StudentPerformanceFactors-selected-columns.csv` is extra to the requested clean package. Determine whether it is referenced before packaging; preserve the source copy.
 7. There is no `requirements.txt`, final `Machine_Learning_IV_Final` directory, or final ZIP yet.
-8. The local Git changes have not yet been committed or pushed; GitHub Pages refresh is pending.
+8. The code and dashboard deployment are complete for this change. A later progress-documentation commit still needs to be pushed after this status update.
 
 ## Exact next steps
 
-1. Fix and rerun the dashboard payload assertion with the observed 27 unique model years; rerun `git diff --check` and inspect the changed-file diff.
-2. Commit/push the verified notebook, dashboard, presentation, README, progress, and continuation updates to `origin main`; monitor the GitHub Pages deployment and verify the hosted dashboard contains the new selected-model metrics.
-3. Audit and improve the notebook upload helper: four independent upload sections, Colab support, GUI when available, explicit headless path fallback, and useful extension/content/column/multi-file/encoding validation.
-4. Execute the complete notebook from a fresh kernel against all four included datasets without source-cell edits, and document any environment-specific UI test gaps.
-5. Complete README setup/reproducibility coverage and add a minimal, accurate `requirements.txt`.
-6. Create a separate `Machine_Learning_IV_Final` folder and `224010_Atharv_M_Bennur_ML_IV_Final.zip`; preserve the source folder/archive and package only required datasets plus required project files.
-7. Review PowerPoint layout with a renderer if one becomes available; otherwise retain the current text/bounds checks and record the limitation.
-8. Extract-test the final ZIP, run all final checks, then update both continuation files. Keep overall status IN PROGRESS until every required item is verified.
+1. Audit and improve the notebook upload helper: four independent upload sections, Colab support, GUI when available, explicit headless path fallback, and useful extension/content/column/multi-file/encoding validation.
+2. Execute the complete notebook from a fresh kernel against all four included datasets without source-cell edits, and document any environment-specific UI test gaps.
+3. Complete README setup/reproducibility coverage and add a minimal, accurate `requirements.txt`.
+4. Create a separate `Machine_Learning_IV_Final` folder and `224010_Atharv_M_Bennur_ML_IV_Final.zip`; preserve the source folder/archive and package only required datasets plus required project files.
+5. Review PowerPoint layout with a renderer if one becomes available; otherwise retain the current text/bounds checks and record the limitation.
+6. Extract-test the final ZIP, run all final checks, then update both continuation files. Keep overall status IN PROGRESS until every requirement is verified.
 
 ## Technical decisions to preserve
 
