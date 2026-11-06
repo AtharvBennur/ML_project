@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Academic report for the Machine Learning IV applied machine learning projects by Atharv M Bennur, roll number 224010.">
+  <title>Machine Learning IV — Applied Machine Learning Projects</title>
+  <style>
+    :root {
+      --ink: #202b38;
+      --muted: #536274;
+      --rule: #a7b5c3;
+      --accent: #087c91;
+      --paper: #fff;
+      --desk: #e7ebef;
+      --serif: "Times New Roman", Times, serif;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--desk); color: var(--ink); }
+    body { margin: 0; font-family: var(--serif); }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: #15202b;
+      color: #fff;
+      font: 14px var(--sans);
+    }
+    .toolbar button {
+      border: 1px solid #6f8798;
+      border-radius: 6px;
+      padding: 8px 14px;
+      background: #203443;
+      color: #fff;
+      cursor: pointer;
+    }
+    .toolbar button:hover { background: #285164; }
+    .toolbar button:focus-visible { outline: 3px solid #65d8e6; outline-offset: 2px; }
+    .toolbar .hint { color: #c4d2df; font-size: 12px; }
+    .report-page {
+      position: relative;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 18px auto;
+      padding: 18mm 19mm 17mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 5px 26px #16202b22;
+      font-size: 11pt;
+      line-height: 1.38;
+    }
+    .report-page p { margin: 0 0 9px; text-align: justify; }
+    .report-page h1, .report-page h2, .report-page h3, .report-page h4 {
+      margin: 0 0 10px;
+      color: #172635;
+      text-align: center;
+    }
+    .report-page h1 { font-size: 23pt; line-height: 1.2; }
+    .report-page h2 { font-size: 16pt; }
+    .report-page h3 { margin-top: 12px; font-size: 12.5pt; text-align: left; }
+    .report-page h4 { margin-top: 9px; font-size: 11pt; text-align: left; }
+    .report-page ul, .report-page ol { margin: 4px 0 10px 23px; padding: 0; }
+    .report-page li { margin: 0 0 4px; text-align: justify; }
+    .running {
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--rule);
+      color: var(--muted);
+      font: 8pt var(--sans);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .folio {
+      position: absolute;
+      right: 19mm;
+      bottom: 9mm;
+      left: 19mm;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 5px;
+      border-top: 1px solid var(--rule);
+      color: var(--muted);
+      font: 8.5pt var(--sans);
+    }
+    .content { padding-bottom: 12mm; }
+    .chapter-label {
+      margin: 16px 0 4px;
+      color: var(--accent);
+      font: 700 9pt var(--sans);
+      letter-spacing: .1em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .chapter-title {
+      margin-bottom: 17px !important;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent);
+      text-align: center !important;
+    }
+    .center { text-align: center !important; }
+    .small { color: var(--muted); font-size: 9.5pt; }
+    .note {
+      margin: 9px 0;
+      padding: 8px 10px;
+      border-left: 3px solid var(--accent);
+      background: #eff7f8;
+      font-size: 10pt;
+    }
+    .logo-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 26px;
+      margin: 2mm auto 7mm;
+    }
+    .logo-row img { max-width: 39mm; max-height: 31mm; object-fit: contain; }
+    .cover { display: flex; flex-direction: column; justify-content: flex-start; text-align: center; }
+    .cover p { text-align: center; }
+    .cover .college { margin: 0 auto 2px; font: 700 17pt var(--serif); text-align: center; }
+    .cover .affiliation { margin: 0 0 2px; text-align: center; }
+    .cover .degree { margin: 7px 0 0; font-weight: 700; letter-spacing: .04em; text-align: center; }
+    .cover .academic-year { margin: 4px 0 8px; font: 700 11pt var(--sans); }
+    .cover .report-on { margin-top: 13mm; font-size: 14pt; }
+    .cover .project-title {
+      max-width: 155mm;
+      margin: 7px auto 10px;
+      color: #123849;
+      font-size: 25pt;
+      line-height: 1.22;
+      text-transform: uppercase;
+    }
+    .cover .submission { max-width: 150mm; margin: 0 auto 9mm; text-align: center; }
+    .cover .student-name { margin: 4px 0 1px; font-size: 16pt; font-weight: 700; }
+    .cover .guide-name { margin: 4px 0 12mm; font-size: 14pt; font-weight: 700; }
+    .cover .footer-affiliation { margin-top: auto; font-size: 10.5pt; }
+    table {
+      width: 100%;
+      margin: 8px 0 11px;
+      border-collapse: collapse;
+      font-size: 9.4pt;
+    }
+    th, td { padding: 5px 6px; border: 1px solid #91a1af; vertical-align: top; }
+    th { background: #eaf0f3; font-weight: 700; text-align: center; }
+    td { text-align: left; }
+    .toc td { padding: 5px 7px; }
+    .toc td:first-child { width: 11%; text-align: center; }
+    .toc td:last-child { width: 22%; text-align: center; }
+    .figure { margin: 9px 0 11px; text-align: center; }
+    .figure img { display: block; width: 100%; max-height: 78mm; object-fit: contain; margin: 0 auto; border: 1px solid #d2dbe2; }
+    .figure img.code { max-height: 57mm; }
+    .figure figcaption { margin-top: 4px; color: var(--muted); font: 8.5pt var(--sans); text-align: center; }
+    .two-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start; }
+    .two-figures .figure img { max-height: 54mm; }
+    .metric { font-weight: 700; color: #123849; }
+    .signature-row { display: flex; justify-content: space-between; gap: 20px; margin-top: 28mm; }
+    .signature { width: 43%; padding-top: 7px; border-top: 1px solid #586674; text-align: center; }
+    .references { font-size: 10pt; }
+    .references li { margin-bottom: 9px; overflow-wrap: anywhere; }
+    #report[contenteditable="true"] .report-page { outline: 2px dashed #18849a; outline-offset: 2px; }
+    section[aria-label="Certificate"] .signature-row { margin-top: 18mm; }
+    section[aria-label="Certificate"] h3 { margin-top: 16mm !important; }
+    @media screen and (max-width: 850px) {
+      .report-page { width: calc(100% - 18px); min-height: auto; margin: 9px; padding: 22px 18px 45px; }
+      .folio { right: 18px; bottom: 14px; left: 18px; }
+      .two-figures { grid-template-columns: 1fr; }
+      .toolbar { flex-wrap: wrap; }
+    }
+    @media print {
+      @page { size: A4; margin: 0; }
+      html, body { width: 210mm; margin: 0; background: #fff; }
+      .toolbar { display: none !important; }
+      .report-page {
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        margin: 0;
+        padding: 18mm 19mm 17mm;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+        overflow: hidden;
+      }
+      .report-page:last-child { page-break-after: auto; break-after: auto; }
+      .figure img { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="toolbar" aria-label="Report controls">
+    <button id="editToggle" type="button" aria-pressed="false">Edit text</button>
+    <button id="printReport" type="button">Print / Save PDF</button>
+    <span class="hint">A4 report · 25 pages · Edit the HTML in VS Code to save permanent changes.</span>
+  </nav>
+  <main id="report">
+    <section class="report-page cover" aria-label="Cover page">
+      <div class="logo-row">
+        <img src="images/kle%20logo.png" alt="Karnatak Lingayat Education Society emblem">
+        <img src="images/co%20img.png" alt="KLE Society Hubballi logo">
+      </div>
+      <p class="college">K.L.E. SOCIETY'S<br>P.C. JABIN SCIENCE COLLEGE, AUTONOMOUS</p>
+      <p class="affiliation">(Affiliated to Karnatak University, Dharwad)<br>HUBBALLI – 580031</p>
+      <p class="degree">BACHELOR OF COMPUTER APPLICATIONS</p>
+      <p class="academic-year">Academic Year 2026–27</p>
+      <p class="report-on">A Dissertation Report<br>On</p>
+      <h1 class="project-title" data-editable>Machine Learning IV —<br>Applied Machine Learning Projects</h1>
+      <p class="submission">Submitted in partial fulfilment of the requirements for the award of the degree<br><strong>BACHELOR OF COMPUTER APPLICATIONS</strong></p>
+      <p>Submitted By</p>
+      <p class="student-name">Atharv M Bennur</p>
+      <p>Register No. 224010</p>
+      <p class="report-on">Under the Guidance of</p>
+      <p class="guide-name">Shashank Umesh Jagatap</p>
+      <p class="footer-affiliation">Affiliated to<br>Karnatak University, Dharwad</p>
+    </section>
+
+    <section class="report-page" aria-label="Certificate">
+      <div class="content">
+        <div class="logo-row"><img src="images/kle%20logo.png" alt="KLE Society emblem"><img src="images/co%20img.png" alt="KLE Society Hubballi logo"></div>
+        <p class="center"><strong>K.L.E. SOCIETY'S<br>P.C. JABIN SCIENCE COLLEGE, AUTONOMOUS</strong><br>(Affiliated to Karnatak University, Dharwad)<br>HUBBALLI – 580031<br>Bachelor of Computer Applications · 2026–27</p>
+        <h1 style="margin-top:20mm">CERTIFICATE</h1>
+        <p style="margin-top:12mm">This is to certify that the project report entitled <strong>“Machine Learning IV — Applied Machine Learning Projects”</strong> is a bonafide work carried out by <strong>Mr. Atharv M Bennur (Register No. 224010)</strong>, under the guidance of <strong>Shashank Umesh Jagatap</strong>, in partial fulfilment of the requirements for the award of the degree of Bachelor of Computer Applications of Karnatak University, Dharwad, during the academic year 2026–27.</p>
+        <p>The report documents four applied machine learning studies using the supplied Iris, used-car, mall-customer, and student-performance datasets. The work includes dataset inspection, preprocessing, model fitting, evaluation, and interpretation of measured outputs.</p>
+        <p>This report is submitted for academic evaluation in accordance with the project work prescribed for the BCA degree.</p>
+        <div class="signature-row">
+          <div class="signature">Project Guide<br>Shashank Umesh Jagatap</div>
+          <div class="signature">Head of the Department<br>BCA Department</div>
+        </div>
+        <h3 style="margin-top:24mm">External Examination</h3>
+        <p>Name of the Examiners</p>
+        <p>1. ____________________________________ &nbsp;&nbsp; Signature with date: __________________</p>
+        <p>2. ____________________________________ &nbsp;&nbsp; Signature with date: __________________</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>i</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Declaration">
+      <div class="content">
+        <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+        <h1 style="margin-top:22mm">DECLARATION</h1>
+        <p style="margin-top:13mm">I hereby declare that the project report entitled <strong>“Machine Learning IV — Applied Machine Learning Projects”</strong>, submitted in fulfilment of the requirements of the BCA project work for the award of the degree of Bachelor of Computer Applications of Karnatak University, Dharwad, during the academic year 2026–27, is a record of my project work.</p>
+        <p>The project applies classification, regression, and unsupervised clustering to the datasets supplied with the project. Dataset descriptions and reported model results are presented as measured outputs from the project notebook and dashboard. No prediction values or evaluation metrics have been intentionally fabricated or adjusted for this report.</p>
+        <p>I further declare that this report has not been submitted, in whole or in part, to any other organisation or institution for the award of any degree or diploma.</p>
+        <p style="margin-top:26mm">Date: ____________________</p>
+        <p>Place: Hubballi</p>
+        <p style="margin-top:22mm"><strong>Atharv M Bennur</strong><br>Register No. 224010<br>BCA Department</p>
+        <p style="margin-top:14mm">Signature: ______________________________</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>ii</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Acknowledgement">
+      <div class="content">
+        <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+        <h1 style="margin-top:22mm">ACKNOWLEDGEMENT</h1>
+        <p style="margin-top:13mm">It is my pleasure to acknowledge the people and institution that supported the completion of this Machine Learning IV project and report.</p>
+        <p>I express my sincere gratitude to <strong>Shashank Umesh Jagatap</strong>, my project guide, for guidance, constructive suggestions, and encouragement during the planning and development of this work.</p>
+        <p>I am grateful to K.L.E. Society's P.C. Jabin Science College, Autonomous, Hubballi, and the BCA Department for providing the academic environment and resources needed to study machine learning concepts through practical projects.</p>
+        <p>I also thank the teaching and non-teaching staff who contributed to the learning environment, and my family and friends for their support throughout the project.</p>
+        <p>The datasets, open-source Python tools, and course materials made it possible to explore four distinct machine learning tasks. I acknowledge the creators and maintainers of those resources in the references section.</p>
+        <p style="margin-top:28mm;text-align:right"><strong>Atharv M Bennur</strong><br>Register No. 224010<br>BCA Department</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>iii</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Abstract">
+      <div class="content">
+        <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+        <h1 style="margin-top:16mm">ABSTRACT</h1>
+        <p>This project demonstrates four applied machine learning workflows using the supplied Iris, Car Dekho, Mall Customers, and Student Performance Factors datasets. The studies cover multiclass flower classification, used-car price regression, customer segmentation, and examination-score regression. A Jupyter notebook contains the data preparation and model evaluation workflow, while a standalone HTML dashboard presents the results and visualizations.</p>
+        <p>For Iris classification, Logistic Regression and tuned K-Nearest Neighbors each achieved <span class="metric">93.3% held-out accuracy</span>. In the car study, 763 exact duplicate rows were removed before splitting. A five-fold training-only comparison selected Lasso Regression on log selling price, with held-out <span class="metric">R² = 0.7720</span>, exceeding the assignment target of 0.75. The earlier approximately 0.519 result is retained as a historical baseline, not a directly comparable re-run.</p>
+        <p>K-Means with five clusters grouped 200 mall customers by annual income and spending score, producing a silhouette score of <span class="metric">0.555</span>. For student performance, Linear Regression obtained held-out <span class="metric">R² = 0.770</span>, MAE 0.452, MSE 3.256, and RMSE 1.804; the Random Forest comparison achieved R² 0.682.</p>
+        <p>The project emphasizes data-aware preprocessing, training-only model selection, held-out evaluation, and interpretation suited to each metric family. Accuracy, R², and silhouette score describe different properties and are not compared as if they were interchangeable.</p>
+        <p><strong>Keywords:</strong> Machine Learning, Classification, Regression, K-Means, Data Preprocessing, Model Evaluation, Python, Scikit-learn.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>iv</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Contents">
+      <div class="content">
+        <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+        <h1 style="margin-top:16mm">CONTENTS</h1>
+        <table class="toc" style="margin-top:12mm">
+          <thead><tr><th>No.</th><th>Chapter / Section</th><th>Pages</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Introduction</td><td>1–2</td></tr>
+            <tr><td>2</td><td>Literature Survey and Feasibility Study</td><td>3–4</td></tr>
+            <tr><td>3</td><td>Technical Requirements</td><td>5</td></tr>
+            <tr><td>4</td><td>Project Description and Methodology</td><td>6–8</td></tr>
+            <tr><td>5</td><td>System Design and Implementation</td><td>9–11</td></tr>
+            <tr><td>6</td><td>User Interface Design and Outputs</td><td>12–15</td></tr>
+            <tr><td>7</td><td>Evaluation and Testing</td><td>16–17</td></tr>
+            <tr><td>8</td><td>Limitations, Conclusion and Future Scope</td><td>18</td></tr>
+            <tr><td></td><td>Bibliography</td><td>19</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:15mm">List of Figures</h3>
+        <p>Figure 5.1–5.4: Selected notebook code excerpts for the four machine learning workflows.</p>
+        <p>Figure 6.1–6.5: Dashboard overview and the four project-specific analytical views.</p>
+        <h3 style="margin-top:11mm">List of Tables</h3>
+        <p>Dataset inventory; model configurations; classification metrics; regression metrics; cluster profiles; and verification checklist.</p>
+        <p class="small" style="margin-top:20mm">Page numbering follows the academic report convention: Roman numerals for preliminary pages and Arabic numerals for the main chapters.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>v</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Introduction page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter I</p><h2 class="chapter-title">INTRODUCTION</h2>
+        <h3>1.1 Background</h3>
+        <p>Machine learning uses data to build computational models that identify patterns and support predictions or grouping. The methods used depend on the task: classification predicts a category, regression estimates a numeric value, and clustering discovers groups when no target labels are supplied. This project studies all three task families through four concrete datasets.</p>
+        <p>The work was prepared as a BCA Machine Learning IV assignment. It connects data handling, exploratory analysis, preprocessing, model fitting, validation, and communication of results. Rather than treating a model score as a result in isolation, each section documents its data, evaluation method, and limits.</p>
+        <h3>1.2 Problem Definition</h3>
+        <p>Practical datasets contain different feature types, scales, targets, and data-quality concerns. A flower dataset requires species classification; vehicle listings require a selling-price estimate; mall customer records invite segmentation; and student factors can be used to estimate examination scores. A single modelling procedure cannot be applied identically to all four problems.</p>
+        <p>The central problem is to select suitable algorithms and preprocessing for each task, evaluate them on data not used to fit the final model, and present findings without overstating predictive ability or implying causation.</p>
+        <h3>1.3 Project Objectives</h3>
+        <ul>
+          <li>Inspect the four supplied CSV files and describe their shape, fields, and data-quality observations.</li>
+          <li>Prepare task-appropriate inputs and targets, keeping identifier fields or irrelevant variables out of the models.</li>
+          <li>Train classification, regression, and clustering models using documented settings.</li>
+          <li>Use held-out evaluation and training-only cross-validation where model selection is required.</li>
+          <li>Explain results using appropriate metrics and create an offline, single-file dashboard for demonstration.</li>
+        </ul>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>1</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Introduction page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">1.4 Scope and Boundaries</h3>
+        <p>The scope includes four independent studies using the project CSV files. Iris models use four flower measurements to classify one of three species. The car pipeline estimates selling price from vehicle age, distance driven, and categorical vehicle information derived from the supplied listing. Mall segmentation uses annual income and spending score with K=5. Student regression estimates `Exam_Score` from the 19 other recorded fields.</p>
+        <p>The scope does not include a deployed prediction API, a hosted model service, or new labels collected from real customers or students. The dashboard embeds verified results and chart data; it does not depend on the CSV files at runtime and does not claim to retrain models interactively.</p>
+        <h3>1.5 Intended Users and Value</h3>
+        <table>
+          <thead><tr><th>Stakeholder</th><th>Interest in the project</th></tr></thead>
+          <tbody>
+            <tr><td>Student developer</td><td>Practise the end-to-end machine learning workflow and produce a reproducible academic submission.</td></tr>
+            <tr><td>Faculty evaluator</td><td>Review dataset decisions, algorithms, evaluation evidence, and limitations in a concise format.</td></tr>
+            <tr><td>Dashboard viewer</td><td>Explore the four studies and understand their outputs without opening the notebook or CSV files.</td></tr>
+          </tbody>
+        </table>
+        <h3>1.6 Project Success Criteria</h3>
+        <ul>
+          <li>Four dataset-specific notebook sections are available and use separate file selection prompts.</li>
+          <li>Reported metrics match the project dashboard payload and notebook evaluation definitions.</li>
+          <li>Car R² is reported with the selected model, hold-out protocol, and historical baseline context.</li>
+          <li>The K-Means study uses five clusters and describes fitted cluster profiles.</li>
+          <li>The standalone dashboard opens locally, has five functional views, and presents responsive visualizations.</li>
+        </ul>
+        <div class="note"><strong>Evaluation principle:</strong> each score must be interpreted within its own task. Classification accuracy, regression R², and clustering silhouette score are not a common ranking scale.</div>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>2</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Literature survey page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter II</p><h2 class="chapter-title">LITERATURE SURVEY AND FEASIBILITY STUDY</h2>
+        <h3>2.1 Classification Methods</h3>
+        <p>Logistic Regression is a supervised classification method that models class probabilities from a linear combination of input features. It is a useful baseline because its fitted decision process is comparatively interpretable. Feature scaling is included in the Iris pipeline so that measurement units do not dominate the estimation.</p>
+        <p>K-Nearest Neighbors is an instance-based method. It assigns a label using the labels of nearby training observations in feature space. Distance-based classification is sensitive to feature scale, so the project scales measurements within the training pipeline. The value of <em>k</em> is selected through cross-validation on training data.</p>
+        <h3>2.2 Regression Methods</h3>
+        <p>Linear Regression models the relationship between input variables and a continuous outcome. Ridge and Lasso add regularization to control coefficient magnitude; Lasso can shrink some coefficients to zero. A log-target transformation can better represent a positive, right-skewed outcome, but predictions must be transformed back to the original currency scale before evaluation.</p>
+        <p>Random Forest Regression averages predictions from decision trees trained on varied samples and feature subsets. It can represent nonlinear relationships and interactions, although its predictions and feature-importance values require careful interpretation. In this project it provides a comparison model for examination scores, not a causal explanation.</p>
+        <h3>2.3 Unsupervised Learning</h3>
+        <p>K-Means assigns observations to a preselected number of groups by minimizing within-cluster squared distance to cluster centers. Standardization is important when input variables use different units. An elbow plot of inertia helps identify where additional clusters yield diminishing reductions. The silhouette score summarizes cohesion and separation, but does not prove that the discovered groups are natural business categories.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>3</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Literature survey page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">2.4 Evaluation Concepts</h3>
+        <p>For classification, accuracy is the proportion of correct predictions; precision, recall, and F1-score provide class-sensitive views. A confusion matrix counts actual labels against predicted labels and exposes where errors occur. Weighted averages account for class support and are reported for the Iris models.</p>
+        <p>For regression, MAE is the average absolute error and retains the target's units. MSE squares errors and penalizes large residuals more strongly; RMSE is its square root and returns to the target's units. R² measures explained variation relative to a mean-prediction reference on the evaluated sample. Negative or lower values indicate weak out-of-sample fit relative to that reference.</p>
+        <p>For clustering, silhouette values summarize how close a point is to its own cluster compared with other clusters. Values closer to 1 indicate clearer separation, values near 0 indicate overlap, and negative values can indicate possible misassignment. It is not classification accuracy.</p>
+        <h3>2.5 Feasibility Assessment</h3>
+        <table>
+          <thead><tr><th>Area</th><th>Assessment</th></tr></thead>
+          <tbody>
+            <tr><td>Technical</td><td>Feasible with Python, Jupyter, pandas, NumPy, scikit-learn, and plotting libraries available in a local or hosted notebook environment.</td></tr>
+            <tr><td>Data</td><td>All four CSV datasets are present in the project and can be selected independently by the notebook sections.</td></tr>
+            <tr><td>Operational</td><td>The dashboard is plain HTML, CSS, and JavaScript with embedded chart data; it opens directly in a modern browser.</td></tr>
+            <tr><td>Academic</td><td>The tasks demonstrate supervised classification, supervised regression, unsupervised clustering, and result communication.</td></tr>
+          </tbody>
+        </table>
+        <h3>2.6 Feasibility Conclusion</h3>
+        <p>The project is feasible with the available datasets and standard open-source data-science tools. Its principal risks are data quality, leakage during evaluation, and overinterpretation of predictive associations. The workflow addresses these by documenting cleaning, fitting transformations on training data, reserving a test partition, and stating limitations alongside results.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>4</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Technical requirements">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter III</p><h2 class="chapter-title">TECHNICAL REQUIREMENTS</h2>
+        <h3>3.1 Hardware and Runtime</h3>
+        <p>The notebook is designed for a general-purpose computer capable of running Python and Jupyter, or a compatible hosted notebook such as Google Colab. The model sizes and datasets are modest for instructional use. No specific processor, memory amount, or operating-system version is imposed by the project.</p>
+        <h3>3.2 Software and Libraries</h3>
+        <table>
+          <thead><tr><th>Component</th><th>Role in the project</th></tr></thead>
+          <tbody>
+            <tr><td>Python and Jupyter Notebook</td><td>Execute and document the independent analysis sections.</td></tr>
+            <tr><td>pandas and NumPy</td><td>Read CSV files, prepare tabular data, and perform numeric operations.</td></tr>
+            <tr><td>scikit-learn</td><td>Preprocessing pipelines, train/test splits, models, cross-validation, and evaluation metrics.</td></tr>
+            <tr><td>Matplotlib and Seaborn</td><td>Notebook exploratory and evaluation visualizations.</td></tr>
+            <tr><td>Web browser</td><td>Open the standalone dashboard and this HTML report directly from disk.</td></tr>
+          </tbody>
+        </table>
+        <h3>3.3 Files and Data Requirements</h3>
+        <ul>
+          <li><code>Iris.csv</code> for species classification.</li>
+          <li><code>CAR DETAILS FROM CAR DEKHO.csv</code> for used-car price regression.</li>
+          <li><code>Mall_Customers.csv</code> for customer clustering.</li>
+          <li><code>StudentPerformanceFactors.csv</code> for examination-score regression.</li>
+          <li>The notebook, the single-file dashboard, presentation, documentation, and report assets.</li>
+        </ul>
+        <p>Each notebook dataset section requests only its own CSV. In local headless execution the file path can be supplied through the notebook's supported loader flow. The report and dashboard use relative images stored in the project's <code>images</code> folder.</p>
+        <h3>3.4 Technical Constraints</h3>
+        <p>The dashboard has no server, database, external API, or chart-library requirement. Its charts are rendered locally. The HTML report uses embedded styles and local image paths, so the report remains editable and printable offline when kept with the project assets.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>5</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Project description page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter IV</p><h2 class="chapter-title">PROJECT DESCRIPTION AND METHODOLOGY</h2>
+        <h3>4.1 Project Portfolio</h3>
+        <p>The work is divided into four independent project sections. Each section starts from its named CSV, defines its target or feature space, performs task-specific preparation, fits one or more algorithms, and interprets outputs appropriate to that task.</p>
+        <table>
+          <thead><tr><th>Project</th><th>Dataset and task</th><th>Methods</th><th>Primary evaluation</th></tr></thead>
+          <tbody>
+            <tr><td>Iris Classification</td><td>Iris.csv · multiclass classification</td><td>Logistic Regression; tuned KNN</td><td>Accuracy, weighted precision/recall/F1, confusion matrix</td></tr>
+            <tr><td>Car Price Prediction</td><td>Car Dekho CSV · continuous regression</td><td>Linear, Ridge, Lasso, Extra Trees comparisons</td><td>MAE, MSE, RMSE, R²</td></tr>
+            <tr><td>Mall Customer Segmentation</td><td>Mall_Customers.csv · unsupervised grouping</td><td>Standardized K-Means, K=5</td><td>Inertia elbow and silhouette score</td></tr>
+            <tr><td>Student Performance Prediction</td><td>StudentPerformanceFactors.csv · continuous regression</td><td>Linear Regression; Random Forest</td><td>MAE, MSE, RMSE, R²</td></tr>
+          </tbody>
+        </table>
+        <h3>4.2 Dataset Inventory</h3>
+        <table>
+          <thead><tr><th>Dataset</th><th>Raw dimensions</th><th>Observed data quality</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>Iris.csv</td><td>150 × 6</td><td>0 missing; 0 duplicate rows</td><td>150 flowers; 3 species</td></tr>
+            <tr><td>Car Dekho CSV</td><td>4,340 × 8</td><td>0 missing; 763 exact duplicates</td><td>Used-car listing and selling price</td></tr>
+            <tr><td>Mall_Customers.csv</td><td>200 × 5</td><td>0 missing; 0 duplicate rows</td><td>Income and spending segmentation</td></tr>
+            <tr><td>StudentPerformanceFactors.csv</td><td>6,607 × 20</td><td>235 missing predictor cells; 0 duplicate rows</td><td>Exam_Score target plus 19 predictors</td></tr>
+          </tbody>
+        </table>
+        <p class="small">Counts above refer to the supplied source files inspected for this report. For the car model, exact duplicates are removed before the train/test split.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>6</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Project description page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">4.3 Model and Feature Design</h3>
+        <h4>Project 1: Iris Classification</h4>
+        <p>Four numeric measurements—sepal length, sepal width, petal length, and petal width—are used to predict one of three species. The identifier column is not a predictor. A stratified 80:20 split with random state 42 supports a balanced held-out test. Scaling is fitted inside each pipeline. KNN's neighbor count is tuned with five-fold training-only cross-validation.</p>
+        <h4>Project 2: Car Price Prediction</h4>
+        <p>The raw target is <code>selling_price</code>. After removing 763 exact duplicates, 3,577 usable rows remain and are divided into 2,861 training and 716 test records. The input design uses vehicle age and log-transformed kilometres driven plus fuel, seller type, transmission, owner, brand, model family, and model name categories. Candidate feature/model configurations are compared on the training partition.</p>
+        <h4>Project 3: Mall Customer Segmentation</h4>
+        <p>Only Annual Income (k$) and Spending Score (1–100) are used as clustering features. Customer ID, gender, and age are excluded from the distance calculation. The two features are standardized, an inertia curve is reviewed for K from 1 to 10, and the required final K=5 model is evaluated by silhouette score.</p>
+        <h4>Project 4: Student Performance Prediction</h4>
+        <p><code>Exam_Score</code> is the target and the other 19 columns are candidate predictors. Missing predictor values are handled inside training-fitted numeric and categorical preprocessing. Linear Regression and Random Forest Regressor are compared; the selected model is determined using training-only cross-validation.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>7</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Project description page 3">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">4.4 Common Workflow</h3>
+        <p class="center"><strong>Dataset → Data inspection → Cleaning → Exploratory analysis → Preprocessing → Model fitting → Evaluation → Interpretation</strong></p>
+        <ol>
+          <li><strong>Load and inspect.</strong> Read the required CSV, confirm its dimensions and field names, and examine missing and duplicate records.</li>
+          <li><strong>Prepare the task data.</strong> Select predictors and target, remove identifier fields, clean duplicates where appropriate, and identify categorical and numeric variables.</li>
+          <li><strong>Explore.</strong> Plot distributions and relationships to understand scale, imbalance, skew, and possible anomalies before fitting.</li>
+          <li><strong>Split and preprocess.</strong> Reserve a held-out test sample; place learned imputation, scaling, and encoding steps inside pipelines so they are fitted only on training data.</li>
+          <li><strong>Select models.</strong> Use cross-validation on training data for hyperparameter or candidate selection; keep the test set out of this process.</li>
+          <li><strong>Evaluate and explain.</strong> Report test metrics, plots, and limitations in the units and context of the task.</li>
+        </ol>
+        <h3>4.5 Reproducibility Choices</h3>
+        <p>Where specified, random state 42 is used for train/test splitting, shuffled folds, and stochastic estimators. Stratified folds are used for Iris classification; K-fold validation is used for regression candidates. Transformations are placed in estimators' pipelines to reduce leakage from the test set into fitted preprocessing parameters.</p>
+        <p>The car study removes exact duplicates before splitting to prevent identical rows from appearing in both partitions. Model selection is based on mean five-fold training R²; the final held-out test results are reported after selection and are not used to choose the model.</p>
+        <div class="note">The dashboard contains embedded data and results so it can be opened independently. It is a presentation layer and not a substitute for re-running the notebook when data or modelling code changes.</div>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>8</span></div>
+    </section>
+
+    <section class="report-page" aria-label="System design page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter V</p><h2 class="chapter-title">SYSTEM DESIGN AND IMPLEMENTATION</h2>
+        <h3>5.1 System Overview</h3>
+        <p>The deliverable is organized around a notebook-driven analysis and a browser-based reporting interface. The notebook contains four separate analytical workflows. The dashboard presents static embedded outputs, metric summaries, and charts. The HTML report brings the project background, methodology, visuals, evaluation, and conclusions into an academic document format.</p>
+        <table>
+          <thead><tr><th>Layer</th><th>Responsibility</th><th>Primary artifact</th></tr></thead>
+          <tbody>
+            <tr><td>Data</td><td>Store the supplied CSV files without altering source content.</td><td><code>Datasets/</code></td></tr>
+            <tr><td>Analysis</td><td>Load, inspect, preprocess, fit, evaluate, and export project outputs.</td><td><code>Notebook/224010_AtharvBennur_ML_Project.ipynb</code></td></tr>
+            <tr><td>Presentation</td><td>Browse the overview and four project-specific result views.</td><td><code>Dashboard/index.html</code></td></tr>
+            <tr><td>Documentation</td><td>Explain the project and provide the academic report.</td><td>README and this report</td></tr>
+          </tbody>
+        </table>
+        <h3>5.2 Dataset Ingestion and Validation</h3>
+        <p>The notebook presents an independent dataset upload section for each of the four CSV files. The loader checks that a selected file can be read and that required fields are present before downstream analysis. This separation prevents one project's selection from being reused accidentally for another project's analysis.</p>
+        <p>Required columns are task-specific: species and measurements for Iris; selling price and vehicle listing fields for cars; income and spending score for malls; and <code>Exam_Score</code> with predictor fields for student performance. Data shapes and missing/duplicate counts are checked before modelling.</p>
+        <h3>5.3 Processing Design</h3>
+        <p>Numeric and categorical transformations are composed with estimators in scikit-learn pipelines. Numerical values are imputed and scaled where appropriate; categorical values are imputed and one-hot encoded. For K-Means, the two selected numeric features are standardized before clustering and transformed back when displaying centers.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>9</span></div>
+    </section>
+
+    <section class="report-page" aria-label="System design page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">5.4 Classification Implementation</h3>
+        <p>The Iris workflow builds Logistic Regression and a KNN pipeline. The KNN search evaluates neighbor counts from 1 to 20 with stratified five-fold training validation. Final metrics and confusion matrices are computed on the held-out test rows. The excerpt below is reproduced from the project notebook.</p>
+        <figure class="figure">
+          <img class="code" src="images/code-iris-pipeline.png" alt="Code excerpt from the notebook showing scaled Logistic Regression and cross-validated K-nearest neighbors training">
+          <figcaption>Figure 5.1 — Iris model pipelines and training-only cross-validation (notebook cell 16).</figcaption>
+        </figure>
+        <h3>5.5 Car Regression Implementation</h3>
+        <p>Candidate car models use identical cleaned training rows and five-fold shuffled validation. The search compares raw and log-target Linear Regression with Ridge, Lasso, and Extra Trees alternatives. Lasso's log-target pipeline is selected by training-fold mean R²; predictions are converted back to the original selling-price scale before held-out metrics are calculated.</p>
+        <figure class="figure">
+          <img class="code" src="images/code-car-model-selection.png" alt="Code excerpt from the notebook showing cross-validation and Ridge, Lasso, and Extra Trees model searches">
+          <figcaption>Figure 5.2 — Training-only candidate search for the used-car regression pipeline (notebook cell 41 excerpt).</figcaption>
+        </figure>
+        <p class="small">The code images are rendered from the current notebook source for legibility; they are illustrative excerpts, not a replacement for the executable notebook.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>10</span></div>
+    </section>
+
+    <section class="report-page" aria-label="System design page 3">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">5.6 Clustering and Student Regression Implementation</h3>
+        <p>The segmentation implementation fits K-Means with five clusters and a fixed initialization setting, then calculates the silhouette score on standardized features. Cluster centers are inverse-transformed to income and spending-score units for interpretation.</p>
+        <figure class="figure">
+          <img class="code" src="images/code-mall-kmeans.png" alt="Notebook code excerpt fitting a five-cluster K-Means model and computing silhouette score">
+          <figcaption>Figure 5.3 — K-Means configuration, assignments, silhouette score, and centers (notebook cell 66).</figcaption>
+        </figure>
+        <p>The student workflow compares Linear Regression and Random Forest Regression. Cross-validation is run on training rows to choose a model, and the held-out test metrics are calculated only for final reporting.</p>
+        <figure class="figure">
+          <img class="code" src="images/code-student-model-selection.png" alt="Notebook code excerpt selecting the student-score regression model using five-fold training cross-validation">
+          <figcaption>Figure 5.4 — Student model selection using training-only five-fold cross-validation (notebook cell 91).</figcaption>
+        </figure>
+        <h3>5.7 Dashboard Implementation</h3>
+        <p>The dashboard uses a single HTML file with inline CSS and JavaScript. Sidebar controls switch among five sections without a page reload. Chart data and verified results are embedded; no dataset or backend is needed when viewing the page. A print control is included for browser printing.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>11</span></div>
+    </section>
+
+    <section class="report-page" aria-label="User interface outputs page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter VI</p><h2 class="chapter-title">USER INTERFACE DESIGN AND OUTPUTS</h2>
+        <h3>6.1 Dashboard Overview</h3>
+        <p>The dashboard follows a dark analytical interface with a compact navigation rail, project identity, and a distinct project page for each task. The overview brings together the student identity, dataset registry, model highlights, and project navigation. The data below is embedded in the dashboard and does not require the source CSV files to remain open.</p>
+        <figure class="figure">
+          <img src="images/dashboard-overview.png" alt="Screenshot of the standalone ML IV analytics dashboard overview showing project identity, headline metrics, project cards, and dataset registry">
+          <figcaption>Figure 6.1 — Overview of the standalone Machine Learning IV analytics dashboard.</figcaption>
+        </figure>
+        <h3>6.2 Project View Design</h3>
+        <p>Each project view is tailored to its task. Classification emphasizes species distribution, model metrics, and confusion matrices. Car regression highlights cleaning, the selected model, error metrics, prediction comparisons, and limitations. The clustering page presents the elbow curve, customer map, cluster profiles, and sizes. Student regression shows model comparison, actual-versus-predicted values, residuals, feature importance, and example estimates.</p>
+        <p>The figures on the following pages are direct local captures of the current dashboard views. Their values correspond to the embedded project results and their chart labels preserve task-specific units.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>12</span></div>
+    </section>
+
+    <section class="report-page" aria-label="User interface outputs page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">6.3 Iris Classification and Car Price Views</h3>
+        <p>The Iris view presents the balanced distribution of 50 examples for each species, measurement summaries, model comparison, and both confusion matrices. Logistic Regression and KNN each achieve 93.3% test accuracy; the matrices show the specific class errors rather than reducing the result to one score.</p>
+        <figure class="figure">
+          <img src="images/dashboard-iris.png" alt="Dashboard screenshot of Iris species distribution, model comparison, confusion matrices, and predictions">
+          <figcaption>Figure 6.2 — Iris classification dashboard view with held-out results.</figcaption>
+        </figure>
+        <p>The car view displays the deduplicated record count and the selected Lasso model alongside its held-out errors. It also distinguishes the earlier R² near 0.519 as a historical run, rather than silently replacing or presenting it as the same evaluation.</p>
+        <figure class="figure">
+          <img src="images/dashboard-car.png" alt="Dashboard screenshot of the selected used-car price regression model, performance metrics, candidate comparison, and historical baseline">
+          <figcaption>Figure 6.3 — Car price view showing the selected model and the historical baseline in context.</figcaption>
+        </figure>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>13</span></div>
+    </section>
+
+    <section class="report-page" aria-label="User interface outputs page 3">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">6.4 Mall Segmentation and Student Performance Views</h3>
+        <p>The mall view uses income and spending score as its two axes and displays five fitted profiles. Cluster identity names summarize the observed centers and are descriptive, not target labels. The silhouette value is reported with K=5 and is interpreted as a separation/cohesion measure.</p>
+        <figure class="figure">
+          <img src="images/dashboard-mall.png" alt="Dashboard screenshot showing the K-Means elbow curve, customer clusters, centroids, and five customer profiles">
+          <figcaption>Figure 6.4 — Mall customer segmentation view with K=5 and five data-derived profiles.</figcaption>
+        </figure>
+        <p>The student view compares both regression models on the same held-out split. The dashboard also plots residuals and includes three verified notebook estimates. The examples are fixed outputs from the notebook; no hardcoded live prediction widget is presented as a trained model.</p>
+        <figure class="figure">
+          <img src="images/dashboard-student.png" alt="Dashboard screenshot of student regression metrics, actual-versus-predicted scores, residuals, feature importance, and notebook examples">
+          <figcaption>Figure 6.5 — Student performance prediction dashboard view.</figcaption>
+        </figure>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>14</span></div>
+    </section>
+
+    <section class="report-page" aria-label="User interface outputs page 4">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">6.5 Result Interpretation</h3>
+        <table>
+          <thead><tr><th>Study</th><th>Measured outcome</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>Iris</td><td>Both classifiers: 93.3% accuracy</td><td>Strong performance on this 30-row held-out sample; the confusion matrix shows remaining species-level errors.</td></tr>
+            <tr><td>Car price</td><td>Lasso log-target R² = 0.7720</td><td>Selected by training-only CV; the held-out score meets the 0.75 target. Currency errors remain substantial.</td></tr>
+            <tr><td>Mall segments</td><td>K=5; silhouette = 0.555</td><td>Moderate separation on the two standardized features; profile names summarize cluster centers.</td></tr>
+            <tr><td>Student score</td><td>Linear Regression R² = 0.770</td><td>It outperformed the Random Forest comparison on the reported test split; R² is not a guarantee for individual students.</td></tr>
+          </tbody>
+        </table>
+        <h3>6.6 Visual Communication Choices</h3>
+        <p>Classification uses class counts and confusion matrices because they show label balance and error type. Car and student regression use actual-versus-predicted and residual plots because they reveal calibration and systematic errors beyond a summary statistic. K-Means uses an elbow curve and a two-dimensional customer map because the fitted space has two interpretable features.</p>
+        <p>Each plot includes a title, axes, and units where applicable. Car prices are expressed in Indian rupees; customer income follows the dataset's thousand-dollar field; student predictions are in score points. Accuracy, R², and silhouette appear in separate context-specific summaries and are not combined into a single cross-task score.</p>
+        <div class="note"><strong>Dashboard independence:</strong> all charts and result tables use embedded data in <code>Dashboard/index.html</code>. The HTML can be opened directly without a server or external chart service.</div>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>15</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Evaluation page 1">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter VII</p><h2 class="chapter-title">EVALUATION AND TESTING</h2>
+        <h3>7.1 Iris Classification Results</h3>
+        <table>
+          <thead><tr><th>Model</th><th>Accuracy</th><th>Weighted precision</th><th>Weighted recall</th><th>Weighted F1</th></tr></thead>
+          <tbody>
+            <tr><td>Logistic Regression</td><td>0.933</td><td>0.933</td><td>0.933</td><td>0.933</td></tr>
+            <tr><td>K-Nearest Neighbors (k=3)</td><td>0.933</td><td>0.944</td><td>0.933</td><td>0.933</td></tr>
+          </tbody>
+        </table>
+        <p>The held-out test contains 30 flowers. In species order Setosa, Versicolor, Virginica, the Logistic Regression confusion matrix is <strong>[[10,0,0],[0,9,1],[0,1,9]]</strong>; the KNN matrix is <strong>[[10,0,0],[0,10,0],[0,2,8]]</strong>. KNN had the higher training-fold cross-validation accuracy and was selected; both models tied on held-out accuracy.</p>
+        <h3>7.2 Car Price Regression Results</h3>
+        <table>
+          <thead><tr><th>Selected model</th><th>MAE (₹)</th><th>MSE (₹²)</th><th>RMSE (₹)</th><th>R²</th></tr></thead>
+          <tbody><tr><td>Lasso Regression (log target)</td><td>95,394.85</td><td>73,430,608,649.04</td><td>270,980.83</td><td>0.772049</td></tr></tbody>
+        </table>
+        <p>The five-fold training CV R² used to select the model was <strong>0.782185</strong>. The held-out test contains 716 records from the deduplicated data. The R² target of 0.75 is met by this selected pipeline. The earlier result, R² ≈ 0.519, is preserved as a historical baseline from a different, duplicate-containing and less engineered setup; it is not a controlled, like-for-like comparison.</p>
+        <p class="small">MSE is stated in squared rupees; its magnitude should not be read as an error in rupees. RMSE is in rupees and is more directly interpretable as a typical error scale.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>16</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Evaluation page 2">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h3 style="margin-top:18px">7.3 Mall Segmentation Results</h3>
+        <p>The required five-cluster K-Means model achieved a silhouette score of <strong>0.5547</strong> (rounded to 0.555 in the dashboard). It used standardized annual income and spending score. Cluster centers are interpreted in the original dataset units.</p>
+        <table>
+          <thead><tr><th>Profile</th><th>Customers</th><th>Mean income (k$)</th><th>Mean spending score</th></tr></thead>
+          <tbody>
+            <tr><td>Medium income, moderate spending</td><td>81</td><td>53.3</td><td>49.5</td></tr>
+            <tr><td>High income, high spending</td><td>39</td><td>86.5</td><td>82.1</td></tr>
+            <tr><td>Low income, high spending</td><td>22</td><td>25.7</td><td>79.4</td></tr>
+            <tr><td>High income, low spending</td><td>35</td><td>88.2</td><td>17.1</td></tr>
+            <tr><td>Low income, low spending</td><td>23</td><td>26.3</td><td>20.9</td></tr>
+          </tbody>
+        </table>
+        <h3>7.4 Student Performance Regression Results</h3>
+        <table>
+          <thead><tr><th>Model</th><th>MAE (points)</th><th>MSE (points²)</th><th>RMSE (points)</th><th>R²</th></tr></thead>
+          <tbody>
+            <tr><td>Linear Regression</td><td>0.452</td><td>3.256</td><td>1.804</td><td>0.770</td></tr>
+            <tr><td>Random Forest Regressor</td><td>1.057</td><td>4.488</td><td>2.119</td><td>0.682</td></tr>
+          </tbody>
+        </table>
+        <p>Linear Regression performed better on this held-out test sample and was selected using training-only cross-validation. The Student Performance Factors file contains 6,607 records and 19 predictors; 235 predictor values are missing and are handled through the fitted preprocessing pipeline.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>17</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Limitations and conclusion">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <p class="chapter-label">Chapter VIII</p><h2 class="chapter-title">LIMITATIONS, CONCLUSION AND FUTURE SCOPE</h2>
+        <h3>8.1 Limitations and Responsible Interpretation</h3>
+        <ul>
+          <li><strong>Iris:</strong> the dataset is small and balanced; test performance on this split does not establish performance on every flower population or measurement process.</li>
+          <li><strong>Cars:</strong> the dataset omits potentially important factors such as condition, accident history, location, and service records. High-price observations and skew can produce large currency residuals. The R² ≈ 0.519 historical score belongs to the earlier setup; the current CV-selected pipeline reports 0.7720 on its held-out split.</li>
+          <li><strong>Mall customers:</strong> the clusters are descriptive groups based on two variables, not validated customer identities or ground-truth segments. Different scaling, samples, or K can change assignments.</li>
+          <li><strong>Student performance:</strong> recorded factors may contain measurement and sampling bias. Associations and feature importance do not prove that changing a factor will cause a score change; predictions must not replace academic judgment or student support.</li>
+        </ul>
+        <h3>8.2 Conclusion</h3>
+        <p>This project applies four different modelling workflows to four supplied datasets. It demonstrates how model choice, preprocessing, and evaluation depend on the task. The Iris classifiers achieved 93.3% held-out accuracy; the updated car pipeline met the R² target with 0.7720; K-Means produced five customer profiles with silhouette 0.555; and Linear Regression achieved student-score R² 0.770, ahead of the Random Forest comparison.</p>
+        <p>The work also shows why transparent cleaning, leakage-aware validation, task-specific metrics, and caveats are necessary parts of a credible machine learning result. A standalone dashboard makes the outputs available for demonstration without a running backend.</p>
+        <h3>8.3 Future Scope</h3>
+        <p>Future work may add a complete fresh-kernel notebook rerun, independent validation data, uncertainty intervals, additional domain-relevant features, more robust temporal or grouped splits where data permits, and structured review of model bias. The dashboard can be refreshed whenever reproducible notebook outputs change. Any new prediction interface should use a verified model artifact rather than fixed example values.</p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>18</span></div>
+    </section>
+
+    <section class="report-page" aria-label="Bibliography">
+      <div class="running">Machine Learning IV — Applied Machine Learning Projects</div>
+      <div class="content">
+        <h2 style="margin-top:18mm">BIBLIOGRAPHY</h2>
+        <ol class="references">
+          <li>Project author. <em>224010_AtharvBennur_ML_Project.ipynb</em>. Machine Learning IV notebook containing the four dataset-specific analysis workflows. Local project artifact, 2026.</li>
+          <li>Project author. <em>Dashboard/index.html</em>. Standalone Machine Learning IV project analytics dashboard with embedded results and visualizations. Local project artifact, 2026.</li>
+          <li>Scikit-learn developers. “User Guide.” Scikit-learn documentation. <a href="https://scikit-learn.org/stable/user_guide.html">https://scikit-learn.org/stable/user_guide.html</a>.</li>
+          <li>Scikit-learn developers. “Model Evaluation: Quantifying the Quality of Predictions.” Scikit-learn documentation. <a href="https://scikit-learn.org/stable/modules/model_evaluation.html">https://scikit-learn.org/stable/modules/model_evaluation.html</a>.</li>
+          <li>Scikit-learn developers. “Clustering.” Scikit-learn documentation. <a href="https://scikit-learn.org/stable/modules/clustering.html">https://scikit-learn.org/stable/modules/clustering.html</a>.</li>
+          <li>The pandas development team. <em>pandas Documentation</em>. <a href="https://pandas.pydata.org/docs/">https://pandas.pydata.org/docs/</a>.</li>
+          <li>NumPy developers. <em>NumPy Documentation</em>. <a href="https://numpy.org/doc/">https://numpy.org/doc/</a>.</li>
+          <li>Matplotlib developers. <em>Matplotlib Documentation</em>. <a href="https://matplotlib.org/stable/">https://matplotlib.org/stable/</a>.</li>
+          <li>Project data files supplied with the Machine Learning IV assignment: <em>Iris.csv</em>, <em>CAR DETAILS FROM CAR DEKHO.csv</em>, <em>Mall_Customers.csv</em>, and <em>StudentPerformanceFactors.csv</em>.</li>
+          <li>K.L.E. Society's P.C. Jabin Science College, Autonomous. BCA academic project report format supplied as <em>new.pdf</em>; used as the formatting reference for this report.</li>
+        </ol>
+        <p class="small" style="margin-top:18mm">All online documentation links were included as references for algorithm and library concepts. Project-specific measured values in this report are taken from the local notebook and dashboard artifacts; they are not sourced from these general references.</p>
+        <p class="center" style="margin-top:24mm"><strong>— End of Report —</strong></p>
+      </div>
+      <div class="folio"><span>BCA Department</span><span>19</span></div>
+    </section>
+  </main>
+  <script>
+    const report = document.getElementById("report");
+    const editButton = document.getElementById("editToggle");
+    const printButton = document.getElementById("printReport");
+    let editing = false;
+    editButton.addEventListener("click", () => {
+      editing = !editing;
+      report.contentEditable = String(editing);
+      editButton.setAttribute("aria-pressed", String(editing));
+      editButton.textContent = editing ? "Finish editing" : "Edit text";
+    });
+    printButton.addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
