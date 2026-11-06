@@ -38,8 +38,10 @@ Open `Dashboard/index.html` directly in a modern browser. It is a standalone HTM
 The dashboard reports the supplied notebook's held-out results:
 
 - **Iris:** Logistic Regression and tuned KNN each achieved 93.3% accuracy.
-- **Car price:** Selected log-target Linear Regression achieved test R² = 0.519. The assignment target of R² ≥ 0.75 is **not met**; the result is shown without adjustment.
+- **Car price:** The optimized pipeline removes 763 exact duplicate rows before splitting (3,577 unique usable rows), engineers model-family/name and vehicle-age features, and selects **Lasso Regression on log selling price** using five-fold training-only CV (CV R² = 0.7822). Held-out test metrics: MAE ₹95,394.85, MSE ₹73,430,608,649.04, RMSE ₹270,980.83, R² = 0.7720. The assignment target R² ≥ 0.75 is **met** by this selected model.
 - **Mall customers:** K-Means with K = 5 achieved a silhouette score of 0.555.
 - **Student performance:** Linear Regression achieved test R² = 0.770; Random Forest Regressor achieved 0.682. Linear Regression was selected using training-only cross-validation.
 
 The notebook was executed against the supplied CSV files when the dashboard was prepared. Scores can vary if data or software versions change.
+
+The original pre-optimization car run (log-target Linear Regression, R² ≈ 0.519) is retained in the dashboard and notebook as a historical result. It used the duplicate-containing dataset and simpler features, so it is not directly comparable to the deduplicated and tuned model. The selected model is chosen by training-only cross-validation; test-set scores are not used to select among candidates.

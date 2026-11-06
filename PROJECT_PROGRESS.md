@@ -10,11 +10,13 @@
 |---|---|---|
 | Source/project inspection | COMPLETED | Inspected the project tree, notebook sections, README, CSV schemas, browser dashboard, and PowerPoint slide text/count. |
 | Dataset availability | COMPLETED | The four full datasets are present under `Datasets/`; the additional selected-columns student CSV is also present and needs a use/cleanup decision. |
-| Notebook modeling workflows | NEEDS VERIFICATION | Notebook modeling cells were executed successfully in a temporary in-memory copy, with the four upload cells replaced by explicit paths to the supplied datasets. The original notebook's upload cells were not fully tested in Colab or headless VS Code. |
+| Notebook modeling workflows | NEEDS VERIFICATION | Revised car-analysis cells 27–50 were executed successfully against the supplied CSV in a temporary notebook copy. Other project metrics remain from the previous verified run; the full fresh-kernel notebook and original upload flow still need verification. |
+| Car model optimization | COMPLETED | Deduplicated before split; trained-only feature/model selection via five-fold CV selected log-target Lasso (CV R² 0.7822); held-out R² 0.7720 meets the 0.75 target. Historical R² 0.519 is retained as a distinct, non-comparable baseline. |
 | Notebook upload/reproducibility requirements | NOT STARTED | Master specification requires robust independent upload sections, file validation, encoding handling, and a headless path fallback. The notebook currently uses Colab upload or a Tkinter picker. |
-| Dashboard UI/UX redesign | COMPLETED | Rebuilt the standalone dashboard as a dark premium cyberpunk analytics workspace, preserving verified embedded results and one-file/offline operation. Browser tested at desktop and responsive widths. |
-| PowerPoint | NEEDS VERIFICATION | Existing deck has exactly five slides and its text includes the measured metrics. It still needs full visual/overflow review and updates to cover all latest slide requirements, including car RMSE and residual analysis. |
-| README | NEEDS VERIFICATION | README was updated for the first dashboard deliverable, but it does not yet satisfy the full latest guide requirements (installation, requirements, per-environment notebook use, reproducibility, etc.). |
+| Dashboard UI/UX redesign and car data sync | COMPLETED | One-file cyberpunk dashboard now embeds the deduplicated car data, selected Lasso metrics, five-model comparison, original baseline, actual/predicted examples, and residual points. Browser tested after refresh across all five pages and responsive widths. |
+| PowerPoint | NEEDS VERIFICATION | Exactly five slides; car slide updated with selected model, CV/test metrics, target status, and historical baseline. Text and slide count verified; visual rendering is unavailable in this environment. |
+| README | NEEDS VERIFICATION | Car metrics and historical-baseline explanation updated. The full setup/reproducibility sections required by the master specification still need completion. |
+| GitHub Pages update | IN PROGRESS | The source is on `main` with `origin` set to `AtharvBennur/ML_project`; latest changes have not yet been committed/pushed or checked on the hosted page. |
 | Requirements file | NOT STARTED | No `requirements.txt` currently exists. |
 | Final project copy | NOT STARTED | No `Machine_Learning_IV_Final` directory exists. Do not replace or destructively alter the current working source tree. |
 | Final ZIP | NOT STARTED | `224010_Atharv_M_Bennur_ML_IV_Final.zip` has not been created or tested. |
@@ -46,16 +48,21 @@ Notebook: `Notebook/224010_AtharvBennur_ML_Project.ipynb`. It contains four sepa
 | Logistic Regression | 0.9333 | 0.9333 | 0.9333 | 0.9333 |
 | K-Nearest Neighbors (selected k=3) | 0.9333 | 0.9444 | 0.9333 | 0.9327 |
 
-### Car price — 4,340 rows
+### Car price — 4,340 raw rows × 8 columns
 
-Notebook selected **Log-target Linear Regression** using training-only cross-validation. Held-out test metrics:
+The revised pipeline removes 763 exact duplicate rows before splitting, leaving 3,577 unique usable rows (2,861 train / 716 test; `random_state=42`). Five-fold shuffled CV (`random_state=42`) on training rows compared raw/log Linear Regression, tuned Ridge/Lasso, and tuned Extra Trees. **Lasso Regression on log selling price** was selected by highest training-CV R²; the test set was not used for model selection.
 
-- MAE: `160,955.1763`
-- MSE: `146,800,118,056.3268`
-- RMSE: `383,145.0353` (derived as `sqrt(MSE)`)
-- R²: `0.5189567`
-- Assignment target R² ≥ 0.75: **NOT MET**. Do not manipulate or obscure this result.
-- Raw-target Linear Regression test metrics: MAE `210,859.8603`, MSE `170,955,646,620.6259`, R² `0.4398024`; RMSE is `sqrt(MSE)`.
+| Candidate | Training CV R² | Test MAE | Test MSE | Test RMSE | Test R² |
+|---|---:|---:|---:|---:|---:|
+| Raw Linear Regression | 0.6210 | 130,302.90 | 113,334,645,530.89 | 336,652.11 | 0.6482 |
+| Log-target Linear Regression | 0.7660 | 96,011.17 | 69,317,640,586.85 | 263,282.44 | 0.7848 |
+| Ridge Regression (log target) | 0.7729 | 94,639.64 | 68,380,857,485.17 | 261,497.34 | 0.7877 |
+| **Lasso Regression (log target), selected** | **0.7822** | **95,394.85** | **73,430,608,649.04** | **270,980.83** | **0.7720** |
+| Extra Trees (log target) | 0.7031 | 128,598.26 | 119,150,395,235.24 | 345,181.68 | 0.6301 |
+
+- Selected Lasso alpha: `0.0001`. Ridge alpha: `0.1`. Extra Trees best search parameters: 140 estimators, max depth 12, max features 1.0, minimum leaf 1.
+- Assignment target R² ≥ 0.75: **MET by the CV-selected model** (held-out R² 0.7720).
+- Preserve the original pre-optimization result as historical: log-target Linear Regression R² `0.5189567`, MAE `160,955.1763`, MSE `146,800,118,056.3268`, RMSE `383,145.0353`. That run retained duplicates and used simpler features; it is not a like-for-like comparison.
 
 ### Mall customer segmentation — 200 rows
 
@@ -79,6 +86,7 @@ Three notebook example estimates from the selected model: `78.65`, `60.35`, and 
 - Single-file HTML/CSS/JavaScript with embedded chart data; it opens from `file://` without a server or external assets.
 - Redesigned to a midnight dark UI with electric cyan, violet, and restrained magenta accents; distinct overview hierarchy, KPI strip, portfolio cards, dataset registry, contextual metric comparison, findings, and separate tailored layouts for each project.
 - Sidebar collapses on desktop with labels/tooltips and expands as a mobile drawer; project-information navigation scrolls to the overview registry. Print report action was verified with the browser print function intercepted.
+- Car page now shows the selected Lasso model, held-out MAE/MSE/RMSE/R², five-candidate training-CV/test comparison, historical R² 0.519 context, deduplication details, real test-row prediction examples, and actual-vs-predicted/residual charts from 103 selected-model test points.
 - Added model metric cards, legible confusion matrices with row/column class labels, comparison metrics, hoverable SVG `<title>` data, cluster profiles, and a car residual-vs-actual chart derived only from embedded actual/predicted test sample data.
 - Browser-tested all five views at five viewport widths (25 page/viewport combinations); every project chart rendered, tables appeared, and no page-error events occurred.
 - Responsive width checks at 1440, 1024, 768, 390, and 320 px found no document horizontal overflow. A transient mobile overflow during viewport transition was identified and fixed by removing the workspace margin transition at the mobile breakpoint; the complete 25-case check passed after the fix.
@@ -86,15 +94,15 @@ Three notebook example estimates from the selected model: `78.65`, `60.35`, and 
 - Print action invoked the browser print function in the verification page. No external scripts/styles/assets are used.
 - Dashboard JavaScript `node --check`, embedded JSON/shape/metric assertions, HTML parser, single-HTML-file assertion, and offline dependency checks passed after the redesign.
 - All four dataset row counts and key scores were checked against the exported notebook results.
-- The dashboard is based on the previously verified notebook execution; it should be refreshed if notebook evaluation or preprocessing is changed in future work.
+- The Iris, Mall, and Student sections retain the previously verified notebook execution. Car results were refreshed by executing the revised car section (cells 27–50) against the supplied CSV; the complete notebook's upload flow remains unverified.
 - Native SVG `<title>` descriptions and the custom point tooltip were verified. A human assistive-technology audit is not performed.
 
 ## Current PowerPoint status
 
 - File: `ML_IV_Presentation.pptx`.
 - Verified by reading its Open XML package: exactly five slides.
-- Text includes all four projects and most current measured results, including the car R² target failure, Mall silhouette and cluster counts, and both student model comparisons.
-- Needs a visual review for overflow/readability and a content update to include the car RMSE and residual-analysis findings required by the latest specification. Recheck all values against the final notebook after any model change.
+- Car slide now includes the CV-selected log-target Lasso, CV R² 0.782, all four held-out metrics, target-met status, and historical 0.519 baseline context.
+- Exactly five slides and updated text were verified. Visual rendering/overflow remains unverified because no presentation renderer is installed on PATH.
 
 ## Current folder and files modified
 
@@ -118,48 +126,50 @@ The active notebook was moved into `Notebook/`; datasets were moved from lowerca
 
 Files created/updated in the active project:
 
-- `Dashboard/index.html` — created.
-- `README.md` — updated; further work required.
+- `Dashboard/index.html` — updated with verified car results and comparison.
+- `Notebook/224010_AtharvBennur_ML_Project.ipynb` — car analysis cells 26, 32–50 updated and executed in a temporary notebook copy.
+- `ML_IV_Presentation.pptx` — car slide updated.
+- `README.md` — car results updated; broader requirements still pending.
 - `PROJECT_PROGRESS.md` — created.
 - `CONTINUATION_PROMPT.md` — created.
-- `Notebook/224010_AtharvBennur_ML_Project.ipynb` and dataset files — moved/reused, not otherwise modified during dashboard creation.
+- Dataset files — reused; no dataset contents were changed.
 
 ## Tests executed and results
 
 - Dataset schema/quality inspection: passed.
-- Notebook model workflow execution in a temporary in-memory copy with explicit dataset paths: passed. This is not a full test of the notebook's original upload cells, Colab, or headless path fallback.
-- Dashboard browser test from local `file://`: passed; all five views rendered; all charts and tables were present; no page errors occurred.
-- Dashboard responsive behavior: 25 page/viewport combinations at 1440, 1024, 768, 390 and 320 px passed without horizontal overflow.
-- Dashboard actions verified: collapsed rail, mobile drawer, project-information jump, chart tooltip, and print action.
-- Dashboard JavaScript `node --check`: passed.
-- HTML parser and embedded dashboard JSON/metric assertions: passed.
-- PowerPoint Open XML slide count and text extraction: exactly five slides, passed.
+- Revised car notebook section (cells 27–50) executed successfully in a temporary notebook copy with the supplied car CSV path; selected Lasso test metrics and target status printed as expected. The full notebook/upload workflow was not executed.
+- Car training-only CV and fixed held-out metrics independently reproduced in a separate Python run; dashboard payload matches the exported comparison and 103 actual/predicted test points.
+- Dashboard browser test from local `file://`: all five views rendered, project navigation worked, SVG charts appeared, comparison and prediction-example tables rendered, target callout showed the measured result, and no page errors occurred.
+- Responsive dashboard check at 1440, 1024, 768, 390, and 320 CSS pixels: no horizontal page overflow (at 320, `scrollWidth` equaled viewport width); mobile drawer navigation worked.
+- Dashboard JavaScript syntax check via extracted inline script and `node --check`: passed.
+- Dashboard data JSON/schema assertions passed: counts, five model rows, selected and historical scores, three examples, 24 price bins, and all 27 represented model years were checked.
+- PowerPoint Open XML: exactly five slides; car slide text contains CV R² 0.782, MAE, MSE, RMSE, test R² 0.772, target met, and historical baseline.
+- `git diff --check`: passed before the latest documentation edits; rerun before commit.
 - Final ZIP extraction/content verification: NOT RUN (ZIP not created).
-- Visual PowerPoint rendering/overflow check: NOT RUN.
+- Visual PowerPoint rendering/overflow check: NOT RUN; no presentation renderer is installed on PATH.
 - Google Colab upload verification: NOT RUN.
 
 ## Known issues and limitations
 
-1. The latest master prompt adds requirements beyond the original dashboard request. Notebook upload improvements, full README, requirements, final project copy, PowerPoint visual/content review, and package/ZIP remain outstanding.
-2. The current notebook's non-Colab upload code uses Tkinter; it lacks the requested guaranteed headless fallback, extension/required-column validation at file selection, and tested encoding recovery.
-3. Notebook cells were not saved with execution outputs; the successful execution was performed in a temporary copy with dataset loader cells changed only for that run.
-4. The car price target R² of 0.75 remains unmet. Report honestly and investigate only with leakage-free validation; do not promise improvement.
-5. Student raw data has 235 missing values; current workflow imputes missing predictors inside a training-fitted pipeline and drops rows with missing target.
-6. `StudentPerformanceFactors-selected-columns.csv` is extra to the requested clean package. Determine whether it is used/referenced before deciding to retain it in the final ZIP; never delete the only copy without checking.
+1. The car target is met by the CV-selected model (test R² 0.7720); the historical pre-optimization 0.519 score is preserved and is not directly comparable.
+2. The original notebook's non-Colab upload code uses Tkinter; the robust headless path fallback, full upload validation, encoding recovery, and Colab upload behavior remain unverified.
+3. Notebook execution outputs were not saved to the source notebook; the updated car section was executed in a temporary copy with only its upload cell pointed to the provided CSV.
+4. The full fresh-kernel notebook and all four upload sections have not yet been executed after the changes.
+5. Student raw data has 235 missing values; the existing workflow imputes predictor gaps inside a training-fitted pipeline and drops rows with a missing target.
+6. `StudentPerformanceFactors-selected-columns.csv` is extra to the requested clean package. Determine whether it is referenced before packaging; preserve the source copy.
 7. There is no `requirements.txt`, final `Machine_Learning_IV_Final` directory, or final ZIP yet.
+8. The local Git changes have not yet been committed or pushed; GitHub Pages refresh is pending.
 
 ## Exact next steps
 
-1. Read `CONTINUATION_PROMPT.md`, recheck this progress file, and inspect current files/diffs before changing anything.
-2. Make a separate `Machine_Learning_IV_Final` copy while preserving the current working folder and original source ZIP. Do not overwrite or destructively clean the source.
-3. Audit and improve the notebook upload helper: four independent dataset upload sections; Colab upload support; local GUI when available; dependable path fallback; no silent in-project auto-load; extension, non-empty file, required-column, multi-upload, and encoding validation with useful errors.
-4. Execute the final notebook from a fresh kernel against all four included datasets without editing cells to inject paths. Save a clean reproducible notebook and record actual results. Test browser/GUI/Colab behavior only where the environment permits and state gaps clearly.
-5. Reassess the car model using training-only validation and the untouched test split. Add requested residual analysis. Retain the current honest result if a sound improvement does not meet 0.75.
-6. If final notebook metrics change, refresh embedded dashboard data and rerun all five-view, chart, navigation, responsive, offline, and browser error checks. The current cyberpunk redesign and car residual visualization are implemented.
-7. Update the PowerPoint to exactly five slides with all required metrics (including car MAE/MSE/RMSE/R²), cluster insights, student model comparison, and concise conclusions. Render/inspect slide bounds if a rendering tool is available.
-8. Add a minimal, accurate `requirements.txt`; complete README with Windows setup, VS Code/Colab instructions, datasets, reproducibility, real metrics, and limitations.
-9. Keep only the four required datasets in the final package unless the extra selected-columns CSV is proven necessary. Build final folder exactly as specified, add both continuation files, create `224010_Atharv_M_Bennur_ML_IV_Final.zip`, and inspect/extract-test it.
-10. Run final notebook, dashboard, PowerPoint, structure, and ZIP checks. Update this progress file after each major stage and mark FINALIZED only after all mandatory requirements are verified.
+1. Fix and rerun the dashboard payload assertion with the observed 27 unique model years; rerun `git diff --check` and inspect the changed-file diff.
+2. Commit/push the verified notebook, dashboard, presentation, README, progress, and continuation updates to `origin main`; monitor the GitHub Pages deployment and verify the hosted dashboard contains the new selected-model metrics.
+3. Audit and improve the notebook upload helper: four independent upload sections, Colab support, GUI when available, explicit headless path fallback, and useful extension/content/column/multi-file/encoding validation.
+4. Execute the complete notebook from a fresh kernel against all four included datasets without source-cell edits, and document any environment-specific UI test gaps.
+5. Complete README setup/reproducibility coverage and add a minimal, accurate `requirements.txt`.
+6. Create a separate `Machine_Learning_IV_Final` folder and `224010_Atharv_M_Bennur_ML_IV_Final.zip`; preserve the source folder/archive and package only required datasets plus required project files.
+7. Review PowerPoint layout with a renderer if one becomes available; otherwise retain the current text/bounds checks and record the limitation.
+8. Extract-test the final ZIP, run all final checks, then update both continuation files. Keep overall status IN PROGRESS until every required item is verified.
 
 ## Technical decisions to preserve
 

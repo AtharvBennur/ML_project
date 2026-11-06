@@ -83,15 +83,12 @@ Use actual datasets and notebook execution. Prevent leakage; do not fabricate re
 ### 2. Used-car price regression — `CAR DETAILS FROM CAR DEKHO.csv`
 
 - Dataset: 4,340 rows × 8 columns; target `selling_price`.
-- Current model selection: Log-target Linear Regression selected with training-only cross-validation.
-- Current held-out results:
-  - MAE `160,955.1763`
-  - MSE `146,800,118,056.3268`
-  - RMSE `383,145.0353`
-  - R² `0.5189567`
-- Raw-target Linear Regression: MAE `210,859.8603`, MSE `170,955,646,620.6259`, R² `0.4398024`; derive/report RMSE from its actual MSE.
-- Assignment target R² ≥ 0.75 is **not met** currently. Investigate with leakage-free train/CV and an untouched test set; if not honestly achieved, retain and explain actual results.
-- Add residual analysis, actual-vs-predicted visualization, feature/data cleaning and limitation explanations. Never imply that the 0.75 target passed.
+- Revised preprocessing removes 763 exact duplicate rows before splitting, leaving 3,577 unique usable rows (2,861 train / 716 test; `random_state=42`).
+- Five-fold shuffled CV (`random_state=42`) on training rows compares raw/log Linear Regression, Ridge, Lasso, and Extra Trees. The highest CV R² selected **Lasso Regression on log selling price**, alpha `0.0001`, CV R² `0.7821854` (± `0.088`).
+- Selected held-out metrics: MAE `95,394.8492`, MSE `73,430,608,649.0417`, RMSE `270,980.8271`, R² `0.7720490`.
+- Assignment target R² ≥ 0.75 is **met by the CV-selected model**. Test scores are not used to select the model.
+- Preserve the original pre-optimization result exactly as a historical baseline: log-target Linear Regression R² `0.5189567`, MAE `160,955.1763`, MSE `146,800,118,056.3268`, RMSE `383,145.0353`. It retained duplicates and used simpler features, so it is not directly comparable to the deduplicated model.
+- The revised notebook car section includes actual-vs-predicted, residual analysis, training-only GridSearchCV/RandomizedSearchCV, held-out example rows, and omitted-predictor limitations.
 
 ### 3. Mall segmentation — `Mall_Customers.csv`
 
@@ -135,7 +132,7 @@ Main file: `Notebook/224010_AtharvBennur_ML_Project.ipynb`.
 
 File: `Dashboard/index.html`.
 
-- The latest master spec explicitly requests a **cyberpunk** dashboard design. The existing dashboard currently has a light analytics design, so redesign it, preserving strong usability and accessible contrast.
+- The latest master spec explicitly requests a **cyberpunk** dashboard design. The current dashboard already has a dark midnight interface, restrained cyan/violet/magenta, collapsible desktop sidebar/mobile drawer, per-project page layouts, local SVG charts, and accessibility/responsive behavior. Preserve this design.
 - One standalone HTML file containing inline CSS, JS, and final actual chart data. No server, external assets, network calls, database, React, or build tools.
 - Five navigable views: Overview, Iris Classification, Car Price Regression, Mall Customer Segmentation, Student Performance Prediction.
 - Professional typography, hierarchy, responsive/mobile layout, readable accessible charts, restrained motion, no fake stats.
@@ -171,12 +168,13 @@ Keep all contents readable/on-slide, no placeholders. Verify slide count, extrac
 `PROJECT_PROGRESS.md` is the authoritative task/status log. At last verification:
 
 - The current source tree has Notebook, Datasets, Dashboard, presentation, README, and continuation documentation.
-- Dashboard now has the requested dark cyberpunk redesign, project-specific layouts, responsive collapsed sidebar/mobile drawer, local SVG charts, actual car residual plot, accessible nav labels, and embedded data. It has been opened from `file://`, browser-tested across all five pages, and checked at 1440/1024/768/390/320 px without horizontal overflow. JS syntax and page-error checks passed.
+- Revised car notebook cells 26 and 32–50 have been executed in a temporary notebook copy using the actual car CSV. The CV-selected model is log-target Lasso (CV R² 0.782185, alpha 0.0001); held-out metrics are MAE 95,394.85, MSE 73,430,608,649.04, RMSE 270,980.83, and R² 0.772049. Target 0.75 is met. Historical R² 0.519 is retained as a distinct, non-comparable baseline.
+- Dashboard now embeds the refreshed car model comparison, baseline, 103 actual/predicted test points, and three verified holdout examples. It has been opened from `file://`; all five views and charts render; browser errors were not observed; responsive widths 1440/1024/768/390/320 and mobile drawer navigation were checked. At 320 CSS px, document scroll width equaled viewport width.
 - Notebook model cells were run successfully only in a temporary in-memory copy where the four dataset uploader cells were replaced with direct file paths. Original uploader cells, fresh-kernel no-edit execution, Colab upload, and headless fallback remain unverified/incomplete.
-- Presentation has exactly five slides by Open XML count, but visual overflow and missing car RMSE/residual details need review.
-- README lacks complete setup/reproducibility coverage. There is no requirements file, final project folder, or final ZIP.
-- Car R² remains 0.519; target 0.75 not met.
+- Presentation has exactly five slides; the car slide now has the final CV-selected model, MAE/MSE/RMSE/R², target-met status, and historical baseline. Visual rendering is unavailable because no presentation renderer is installed on PATH.
+- README now has the updated car metrics and baseline explanation; full setup/reproducibility coverage is still incomplete. There is no requirements file, final project folder, or final ZIP.
+- GitHub changes have not yet been committed/pushed; Pages refresh still needs verification.
 
-**First action:** inspect `PROJECT_PROGRESS.md`, current project tree and files, then begin the earliest outstanding notebook upload/reproducibility task. Do not repeat dashboard browser checks unless dashboard code/data changes.
+**First action:** read `PROJECT_PROGRESS.md`, verify current diffs and dashboard JSON, run the focused notebook/dashboard/PPT checks, then commit and push the verified changes to `origin main`. Check the GitHub Pages deployment and hosted dashboard for the new car result. After publication, continue the earliest outstanding notebook upload/reproducibility requirement. Do not repeat dashboard browser checks unless its code/data changes.
 
 After each major stage update `PROJECT_PROGRESS.md`; update this prompt if any requirements or workflow change. Do not claim tests/Colab/UI results unless actually run. Final response should identify files changed, actual metrics, notebook/browser/PPT checks, limitations, and final ZIP and individual locations.
