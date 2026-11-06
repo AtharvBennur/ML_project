@@ -160,7 +160,7 @@ Files created/updated in the active project:
 5. Student raw data has 235 missing values; the existing workflow imputes predictor gaps inside a training-fitted pipeline and drops rows with a missing target.
 6. `StudentPerformanceFactors-selected-columns.csv` is extra to the requested clean package. Determine whether it is referenced before packaging; preserve the source copy.
 7. There is no `requirements.txt`, final `Machine_Learning_IV_Final` directory, or final ZIP yet.
-8. The code and dashboard deployment are complete for this change. A later progress-documentation commit still needs to be pushed after this status update.
+8. The code, deployment-status documentation, and continuation prompt have been pushed; the dashboard deployment for the verified code commit succeeded.
 
 ## Exact next steps
 
