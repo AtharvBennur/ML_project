@@ -524,6 +524,8 @@
           <div class="grid grid-2"><article class="copy-panel"><h3>1 · Inspect, validate, and clean</h3><p>Use 19 predictors and Exam_Score; the unrelated student identifier is not modeled. There are <b>0</b> exact duplicates, <b>0</b> missing target values, and <b>235</b> missing predictor cells: Teacher_Quality (78), Parental_Education_Level (90), and Distance_from_Home (67). No rows are removed; predictor gaps are handled in the fitted pipeline.</p></article><article class="copy-panel"><h3>2 · Split, preprocess, compare</h3><p>Split 5,285 training rows and 1,322 test rows (80/20, random state 42). Median-impute and standardize numeric inputs; most-frequent-impute and one-hot encode categorical inputs. Compare Linear Regression and Random Forest using five-fold CV on training data only.</p></article></div>
           <div class="section-head"><div><h2>Model comparison</h2><p>Both models use the same held-out split; model selection used training-only cross-validation.</p></div><span class="section-meta">SELECTED · <span id="studentSelectedModel"></span></span></div>
           <article class="panel"><div class="panel-head"><div><h3>Held-out regression metrics</h3><p class="panel-sub">MAE, RMSE in score points; MSE in squared points; higher R² indicates more explained variance.</p></div><span class="panel-tag">20% TEST SPLIT</span></div><div id="studentMetricsTable"></div><div class="metrics-duo" id="studentModelCards" style="margin-top:11px"></div><p class="panel-sub" style="margin-top:11px"><b>Training-only five-fold CV R²:</b> Linear Regression 0.715585; Random Forest Regressor 0.627511. Linear Regression is selected on this CV comparison. Accuracy, precision, recall, and F1 are classification metrics and do not apply to continuous Exam_Score regression; MAE, MSE, RMSE, and R² are the appropriate reported results.</p></article>
+          <div class="section-head"><div><h2>Tolerance-based prediction accuracy</h2><p>Regression hit rate: percentage of sampled test predictions whose absolute score error is within the stated tolerance.</p></div><span class="section-meta">500-ROW TEST SAMPLE</span></div>
+          <article class="panel"><div class="panel-head"><div><h3>Predictions within score-point tolerances</h3><p class="panel-sub">This is an explicitly defined tolerance-based hit rate, not standard classification accuracy.</p></div><span class="panel-tag">LINEAR REGRESSION</span></div><div id="studentAccuracyTable"></div></article>
           <div class="grid grid-2" style="margin-top:12px">
             <article class="panel"><div class="panel-head"><div><h3>Actual vs predicted score</h3><p class="panel-sub">Deterministic sample of test rows; dashed diagonal indicates ideal predictions.</p></div></div><div class="chart" id="studentActualPredicted"></div></article>
             <article class="panel"><div class="panel-head"><div><h3>Exam score distribution</h3><p class="panel-sub">Observed target values after rows missing Exam_Score are excluded.</p></div><span class="panel-tag">SCORE</span></div><div class="chart" id="studentTarget"></div></article>
@@ -541,7 +543,7 @@
           </div>
           <div class="section-head"><div><h2>Data quality and input coverage</h2><p>Missing predictor values are imputed; rows without a target cannot be used for supervised training.</p></div></div>
           <div class="grid grid-2"><article class="panel"><div class="panel-head"><div><h3>Model feature set</h3><p class="panel-sub">Nineteen inputs from study habits, resources, and context.</p></div></div><div class="feature-tags" id="studentFeatures"></div><p id="studentCleaning" class="panel-sub" style="margin-top:11px"></p></article><article class="panel"><div class="panel-head"><div><h3>Source preview</h3><p class="panel-sub">First six rows of the supplied dataset.</p></div></div><div class="table-wrap" id="studentPreview"></div></article></div>
-          <div class="copy-panel" style="margin-top:12px"><h3>Project conclusion</h3><p>On this fixed holdout, Linear Regression outperformed Random Forest by R² and absolute error. The result supports a compact linear baseline for this dataset, not a claim that student performance is determined by the recorded factors. Missing predictor values were handled inside the training pipeline; test records were kept for final evaluation. Additional classroom and resource data, careful validation across cohorts, and uncertainty communication are appropriate next steps before operational use.</p></div>
+          <div class="copy-panel" style="margin-top:12px"><h3>Project conclusion</h3><ol style="margin:8px 0 0;padding-left:17px"><li>Linear Regression was selected by training-only cross-validation and achieved test R² = 0.770.</li><li>Its test MAE was 0.452 score points, outperforming the Random Forest baseline on this split.</li><li>The model uses recorded study and background factors, which may omit important influences on exam results.</li><li>Predictive associations do not show that any recorded factor causes a change in student performance.</li><li>Improve reliability by validating across new student cohorts and adding relevant classroom data.</li></ol></div>
         </section>
       </main>
     </div>
@@ -832,6 +834,15 @@
       $('studentSelectedModel').textContent=d.bestModel.toUpperCase();
       metricTable('studentMetricsTable',d.metrics,3);
       $('studentModelCards').innerHTML=Object.entries(d.metrics).map(([name,metrics])=>modelCard(name,metrics,'R2')).join('');
+      const accuracyTolerances=[0.5,1,2];
+      table('studentAccuracyTable',accuracyTolerances.map(tolerance=>{
+        const within=d.actualPredicted.filter(row=>Math.abs(row.actual-row.predicted)<=tolerance).length;
+        return {
+          'Allowed absolute error':`±${tolerance} score points`,
+          'Within tolerance':`${within} / ${d.actualPredicted.length}`,
+          'Hit rate':`${(within/d.actualPredicted.length*100).toFixed(1)}%`
+        };
+      }),accuracyTolerances.length);
       const xmax=Math.max(...d.actualPredicted.map(r=>r.actual),...d.actualPredicted.map(r=>r.predicted));
       drawScatter('studentActualPredicted',d.actualPredicted,'actual','predicted','Actual Exam_Score','Predicted Exam_Score',{diagonal:true,xmin:Math.floor(Math.min(...d.actualPredicted.map(r=>r.actual))),xmax:Math.ceil(xmax),ymin:Math.floor(Math.min(...d.actualPredicted.map(r=>r.predicted))),ymax:Math.ceil(xmax),color:COLORS[1],opacity:.62,r:3});
       drawHistogram('studentTarget',d.targetHistogram,COLORS[1],'Exam score','Students');
