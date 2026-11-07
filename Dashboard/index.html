@@ -528,6 +528,8 @@
             <article class="panel"><div class="panel-head"><div><h3>Actual vs predicted score</h3><p class="panel-sub">Deterministic sample of test rows; dashed diagonal indicates ideal predictions.</p></div></div><div class="chart" id="studentActualPredicted"></div></article>
             <article class="panel"><div class="panel-head"><div><h3>Exam score distribution</h3><p class="panel-sub">Observed target values after rows missing Exam_Score are excluded.</p></div><span class="panel-tag">SCORE</span></div><div class="chart" id="studentTarget"></div></article>
           </div>
+          <div class="section-head"><div><h2>Held-out prediction outputs</h2><p>First 20 records from the deterministic test-set sample, scored by the selected Linear Regression model.</p></div><span class="section-meta">ACTUAL · PREDICTED · ERROR</span></div>
+          <article class="panel"><div class="panel-head"><div><h3>Test-set output table</h3><p class="panel-sub">Residual = actual score − predicted score; absolute error shows the size of the miss.</p></div><span class="panel-tag">TEST SAMPLE · 20 ROWS</span></div><div class="table-wrap" id="studentTestOutputs"></div></article>
           <div class="grid grid-2" style="margin-top:12px">
             <article class="panel"><div class="panel-head"><div><h3>Residual pattern</h3><p class="panel-sub">Actual minus predicted; the zero line indicates no error.</p></div></div><div class="chart" id="studentResiduals"></div></article>
             <article class="panel"><div class="panel-head"><div><h3>Random Forest feature importance</h3><p class="panel-sub">Top encoded inputs by impurity importance; association is not causation.</p></div><span class="panel-tag">TOP 12</span></div><div class="chart" id="studentImportance"></div></article>
@@ -833,6 +835,13 @@
       const xmax=Math.max(...d.actualPredicted.map(r=>r.actual),...d.actualPredicted.map(r=>r.predicted));
       drawScatter('studentActualPredicted',d.actualPredicted,'actual','predicted','Actual Exam_Score','Predicted Exam_Score',{diagonal:true,xmin:Math.floor(Math.min(...d.actualPredicted.map(r=>r.actual))),xmax:Math.ceil(xmax),ymin:Math.floor(Math.min(...d.actualPredicted.map(r=>r.predicted))),ymax:Math.ceil(xmax),color:COLORS[1],opacity:.62,r:3});
       drawHistogram('studentTarget',d.targetHistogram,COLORS[1],'Exam score','Students');
+      table('studentTestOutputs',d.actualPredicted.slice(0,20).map((row,index)=>({
+        'Test Sample':index+1,
+        'Actual Exam_Score':row.actual,
+        'Predicted Exam_Score':row.predicted,
+        'Residual (Actual - Predicted)':row.actual-row.predicted,
+        'Absolute Error':Math.abs(row.actual-row.predicted)
+      })),20);
       const rx=d.residuals.map(r=>r.predicted),ry=d.residuals.map(r=>r.residual),span=Math.max(...ry.map(Math.abs));
       drawScatter('studentResiduals',d.residuals,'predicted','residual','Predicted score','Residual (points)',{xmin:Math.floor(Math.min(...rx)),xmax:Math.ceil(Math.max(...rx)),ymin:-Math.ceil(span),ymax:Math.ceil(span),zeroLine:true,color:COLORS[1],opacity:.62,r:3});
       drawHorizontal('studentImportance',d.featureImportance);
